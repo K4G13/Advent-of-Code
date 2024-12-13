@@ -23,10 +23,10 @@ $$
 
 Now we determine the equation of diagonal lines with slope equal to -1 with coefficient b as parameter where n is number of rows in matrix:
 $$
-y = -x + b
+         y = -x + b
 $$
 $$
-b \in \langle 0;2n - 1)
+         b \in \langle 0;2n - 1)
 $$
 
 And secound equation for opposite lines with slope equal to 1:
