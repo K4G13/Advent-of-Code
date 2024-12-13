@@ -35,7 +35,6 @@ And secound equation for opposite lines with slope equal to 1:
 $$
 y = x + b
 $$
-
 $$
 b \in \langle 1-N;n)
 $$
