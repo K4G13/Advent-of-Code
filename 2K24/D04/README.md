@@ -8,6 +8,8 @@ $$
 \end{matrix}
 $$
 
+(!) points are determined as (y,x) insted of (x,y) because of array access ( arr[y][x] )
+
 # Linear function diagonal traverse
 First we transfor matrix above to points in cartesian system.
 
