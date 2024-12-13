@@ -22,17 +22,20 @@ $$
 $$
 
 Now we determine the equation of diagonal lines with slope equal to -1 with coefficient b as parameter where n is number of rows in matrix:
-$
+
+$$
          y = -x + b
-$
-$
+$$
+$$
          b \in \langle 0;2n - 1)
-$
+$$
 
 And secound equation for opposite lines with slope equal to 1:
+
 $$
 y = x + b
 $$
+
 $$
 b \in \langle 1-N;n)
 $$
@@ -75,6 +78,7 @@ M
 Problem with this solution is the unnecessary calculations for points that we have already searched and the time complexity of $O(n^{3})$.
 
 # Second aproach
+
 $$
 \begin{matrix}
          & _{0} & _{1} & _{2} & _{3} \\
@@ -84,6 +88,7 @@ $$
     _{3} &   M  &   N  &   O  &   P    
 \end{matrix}
 $$
+
 We will define $X$ as matrix's number of columns and $Y$ as number of rows. <br>
 Firstly we define starting cooridnates of diagonal lines which are $A,B,C,D,H,L$ and $P$ with values of y and x: $(0,0) , (0,1) , (0,2) , (0,3) , (1,3) , (2,3) , (3,3)$. <br>
 As we can observe firstly $x$ is rising from $0$ to $X-1$ then it stays constant and $y$ starts to rise up to $Y-1$. We can code it as:
