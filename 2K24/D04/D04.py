@@ -42,5 +42,16 @@ while xs < X:
     else: xs += 1
     counter += s.count(FRAZE) + s.count(FRAZE[::-1])
 
+print(counter)
 
+
+# PART 2 
+
+counter = 0
+for y in range(0,Y-2):
+    for x in range(0,X-2):
+        d1 = "" + raw_data[y][x] + raw_data[y+1][x+1] + raw_data[y+2][x+2]
+        d2 = "" + raw_data[y][x+2] + raw_data[y+1][x+1] + raw_data[y+2][x]
+        if (d1 == "MAS" or d1 == "SAM") and (d2 == "MAS" or d2 == "SAM"):
+            counter += 1
 print(counter)
