@@ -3,33 +3,43 @@ equations = f.read().split("\n")
 f.close()
 
 
-def evaluate(numbers,resolution):
+def eval(numbers,score,target):
 
-    if len(numbers) == 1:
-        if resolution == numbers[0]: return True
+    if numbers == []: 
+        if score == target: return True
         else: return False
 
-    adding = evaluate(numbers[:-1],resolution-numbers[-1])
-    multiplying = evaluate(numbers[:-1],resolution/numbers[-1])
-    return adding or multiplying
+    return  eval(numbers[1:], score + numbers[0],target) or\
+            eval(numbers[1:], score * numbers[0],target)
 
 
-count_sum = 0
+def eval2(numbers,score,target):
+
+    if numbers == []: 
+        if score == target: return True
+        else: return False
+
+    return  eval2(numbers[1:], score + numbers[0],target) or\
+            eval2(numbers[1:], score * numbers[0],target) or\
+            eval2(numbers[1:], int(str(score) + str(numbers[0])),target)
+    
+
+
+count = 0
+count2 = 0
 for equation in equations:
 
-    resolution,nummbers = equation.split(": ")
-    resolution = int(resolution)
+
+    target,nummbers = equation.split(": ")
+    target = int(target)
     nummbers = nummbers.split(" ")
     nummbers = [int(x) for x in nummbers]
 
-    correct = evaluate(nummbers,resolution)
-    if correct: count_sum += resolution
+    correct = eval(nummbers,0,target)
+    if correct: count += target
 
-print(count_sum)
+    correct2 = eval2(nummbers,0,target)
+    if correct2: count2 += target
 
-
-# PART 2
-
-
-
-    
+print(count)    
+print(count2)    
