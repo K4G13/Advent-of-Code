@@ -1,5 +1,7 @@
 initial_state = list(map(int,open("input").read().split()))
 
+# PART 1
+
 class Node:
 
     def __init__(self, value):
@@ -65,7 +67,42 @@ class LinkedList:
         
 stones = LinkedList()
 for el in initial_state: stones.add(el)
-
-BLINKS = 25
-for _ in range(BLINKS): stones.blink()
+for _ in range(25): stones.blink()
 print(len(stones))
+
+
+
+# PART 2
+
+cache = {}
+def blink(val,depth=0):
+
+    if (val,depth) in cache:
+        return cache[(val,depth)]    
+
+    res = 0
+
+    if depth <= 0: 
+        res = 1
+
+    elif val == 0: 
+        res = blink(1,depth-1)
+
+    elif len(str(val)) % 2 == 0:
+        s = str(val)
+        a,b = int(s[:len(s)//2]), int(s[len(s)//2:])
+        res = blink(a,depth-1) + blink(b,depth-1)    
+
+    else:
+        res = blink(val*2024,depth-1)
+
+    if (val,depth) not in cache: 
+        cache[(val,depth)] = res
+
+    return res
+
+
+count = 0
+for el in initial_state:
+    count += blink(el,75)
+print(count)
