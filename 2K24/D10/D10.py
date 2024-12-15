@@ -36,3 +36,31 @@ for start in starts:
     count += len(endpoints)
 
 print(count)
+
+# PART 2
+
+def find_paths(x,y,h=0):
+
+    if h==9: return 1
+
+    score = 0
+
+    if x > 0 and topography[y][x-1] == h+1:
+        score += find_paths(x-1,y,h+1) 
+    
+    if x < NC-1 and topography[y][x+1] == h+1:
+        score += find_paths(x+1,y,h+1) 
+
+    if y > 0 and topography[y-1][x] == h+1:
+        score += find_paths(x,y-1,h+1) 
+
+    if y < NR-1 and topography[y+1][x] == h+1:
+        score += find_paths(x,y+1,h+1) 
+
+    return score
+
+count = 0
+for start in starts:
+    x,y = start
+    count += find_paths(x,y)
+print(count)
