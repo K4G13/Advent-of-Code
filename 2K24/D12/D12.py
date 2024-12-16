@@ -90,7 +90,7 @@ def getEdges(points,log=False):
 
         for i in range(4):
             c,v,h = corrners[i]
-            if v+h==0 and c==0: correct[i] = True
+            if v+h==0: correct[i] = True
             if v+h==2 and c==0: correct[i] = True
 
         if(log): print(correct)
@@ -142,6 +142,6 @@ for y in range(Y):
         if visited[y][x]: continue
         section = getSection(x,y)
         for p in section: visited[p[1]][p[0]] = True
-        price += len(section) * getEdges(section,True)
+        price += len(section) * getEdges(section,False)
         section.clear()
 print(price)
