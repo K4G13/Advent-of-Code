@@ -1,5 +1,3 @@
-# 953738 Git
-
 raw_input  = open("input").read()
 garden = [list(x) for x in raw_input.split("\n")]
 X,Y = len(garden[0]),len(garden)
