@@ -31,7 +31,7 @@ $$
 Now we can check if it works. We put into equation data from above.
 
 $$
-    n = \frac{540022-840067}{34*22-9467} = 80 \\
+    n = \frac{5400*22-8400*67}{34*22-9467} = 80 \\
     m = \frac{8400-8094}{22} = 40
 $$
 
