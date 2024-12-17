@@ -1,103 +1,110 @@
-INPUT_NAME = "input"
-DRAW = False
-PAUSE = False
+import argparse
 
-def load_input(file_name):
-    raw_input = open(file_name).read().split("\n")
+parser = argparse.ArgumentParser()
+parser.add_argument('-d', '--draw', action='store_true')
+parser.add_argument('-p', '--pause', action='store_true')
+parser.add_argument('-f', '--file', default='input')
+args = parser.parse_args()
 
-    warehouse = []
-    moves = []
+def load_data():
+    
+    data = open(args.file).read().split('\n')
+
+    matrix = []
+    instructions = []
 
     offset = 0
-    for i,row in enumerate(raw_input):
+    for i,row in enumerate(data):
+
         if row == "":
             offset = i
             break
-        warehouse.append(list(row))
-    for row in raw_input[offset+1:]:
-        moves.extend(list(row))
 
-    return warehouse,moves
+        matrix.append(list(row))
 
-class Bot:
-    def __init__(self):
-        self.x = 0
-        self.y = 0
+    for row in data[offset+1:]:
+        instructions.extend(list(row))
 
-def draw():
-    for row in warehouse:
+    return matrix,instructions
+
+def draw(matrix,sep=" "):
+    
+    for row in matrix:
         for el in row:
-            print(el,end=" ")
+            print(el,end=sep)
         print()
 
-def push(x,y,dx,dy):
+    if args.pause: input()
 
-    count = 0
+class Bot:
 
-    if warehouse[ y+dy ][ x+dx ] == ".":
-        warehouse[ y+dy ][ x+dx ] = "O"
-        return 1
-    
-    elif warehouse[ y+dy ][ x+dx ] == "O":
-        count += push(x+dx,y+dy,dx,dy)        
+    def __init__(self,mtrx):
+        self.mtrx = mtrx        
+        self.x = 0
+        self.y = 0
+        self.find_start()
 
-    elif warehouse[ y+dy ][ x+dx ] == "#":
-        return count
+    def find_start(self):
+        for y, row in enumerate(self.mtrx):
+            for x, el in enumerate(row):
+                if el == "@": self.x, self.y = x, y
 
-    return count
+    def move(self,inst):
 
-warehouse,moves = load_input(INPUT_NAME)
-ROWS = len(warehouse)
-COLS = len(warehouse[0])
-bot = Bot
-for y,row in enumerate(warehouse):
-    for x,el in enumerate(row):
-        if el == "@": 
-            bot.x = x
-            bot.y = y
+        dx,dy = 0,0
+        if inst == '>': dx = +1
+        if inst == '<': dx = -1
+        if inst == 'v': dy = +1
+        if inst == '^': dy = -1
 
-if DRAW:
-    print("Initial state:")
-    draw()
-if PAUSE: input()
-if DRAW and not PAUSE: print()
+        if self.mtrx[self.y+dy][self.x+dx] == '.':
+            self.x += dx
+            self.y += dy
+            self.mtrx[self.y][self.x] = '@'
+            self.mtrx[self.y-dy][self.x-dx] = '.'
 
-#simulate
-for move in moves:
-    
-    dx,dy = 0,0
+        elif self.mtrx[self.y+dy][self.x+dx] == 'O':
+            if self.push(self.x+dx,self.y+dy,dx,dy):                
+                self.x += dx
+                self.y += dy
+                self.mtrx[self.y][self.x] = '@'
+                self.mtrx[self.y-dy][self.x-dx] = '.'
 
-    if (move == ">"): dx += 1
-    if (move == "<"): dx -= 1
-    if (move == "v"): dy +=1
-    if (move == "^"): dy -= 1
+    def push(self,x,y,dx,dy):
+        
+        if self.mtrx[y+dy][x+dx] == 'O':
+            is_space = self.push(x+dx,y+dy,dx,dy)
+            if is_space:
+                self.mtrx[y+dy][x+dx] = 'O'
+                return True
+            else:
+                return False
+
+        if self.mtrx[y+dy][x+dx] == '.':
+            self.mtrx[y+dy][x+dx] = 'O'
+            return True
+        
+        if self.mtrx[y+dy][x+dx] == '#':
+            return False
+
+        return False
+
+    def calc_GPS(self):
+        total = 0
+        for y,row in enumerate(self.mtrx):
+            for x,el in enumerate(row):
+                if el == "O": 
+                    total += 100*y + x
+        return total
 
 
-    if warehouse[ bot.y+dy ][ bot.x+dx ] == ".":
-        warehouse[ bot.y ][ bot.x ] = "."
-        bot.x += dx
-        bot.y += dy
-        warehouse[ bot.y ][ bot.x ] = "@"
-    
-    elif warehouse[ bot.y+dy ][ bot.x+dx ] == "#":
-        ...
-    
-    elif warehouse[ bot.y+dy ][ bot.x+dx ] == "O":
-        if push( bot.x+dx, bot.y+dy, dx, dy ) > 0: 
-            warehouse[ bot.y ][ bot.x ] = "."
-            bot.x += dx
-            bot.y += dy
-            warehouse[ bot.y ][ bot.x ] = "@"
+# simulate PART 1
+mtrx,instructions = load_data()
+bot = Bot(mtrx)
 
-    if DRAW:         
-        print(f"Move {move}:")
-        draw()
-    if PAUSE: input()
-    if DRAW and not PAUSE: print()
-
-#sum GPS coordinates
-total = 0
-for y,row in enumerate(warehouse):
-    for x,el in enumerate(row):
-        if el == "O": total += 100*y + x
-print(f"[PART1] Sum of GPS coordinates: {total}")
+for inst in instructions:
+    bot.move(inst)
+    if args.draw: 
+        print("Inst:",inst)
+        draw(bot.mtrx)
+print(f"[ PART 1 ] GPS = {bot.calc_GPS()}")
