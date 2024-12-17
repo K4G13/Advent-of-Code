@@ -29,11 +29,12 @@ def calc(bttA,bttB,prize):
 
     return n,m
 
+# PART 1
+
 total = 0
 for machine in machines:
     a,b,p = machine
     A,B = calc(a,b,p)
-
     tokens = 0
 
     if  int(A)==A and int(B)==B and\
@@ -46,3 +47,22 @@ for machine in machines:
 
 print(total)
 
+
+
+# PART 2
+
+total = 0
+for machine in machines:
+    a,b,p = machine
+    p = (p[0]+10000000000000) , (p[1]+10000000000000)
+    A,B = calc(a,b,p)
+    tokens = 0
+
+    if  int(A)==A and int(B)==B and\
+        A>=0 and B>=0:
+        tokens = A*3 + B*1
+
+    # print(A,B,tokens)
+    total += int(tokens)
+
+print(total)
