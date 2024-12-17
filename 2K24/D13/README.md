@@ -31,8 +31,8 @@ $$
 Now we can check if it works. We put into equation data from above.
 
 $$
-    n = 5
-    m = 5
+    n = \frac{5400*22-8400*67}{34*22-94*67} = 80 \\
+    m = \frac{8400-80*94}{22} = 40
 $$
 
 We need to remember that $n,m \in N^+$ so if our solution does not belong to established domain it means that there is no combination of $\overrightarrow{bttA}$ and $\overrightarrow{bttB}$ that achives our initial goal.
