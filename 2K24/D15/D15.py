@@ -44,6 +44,7 @@ def draw(matrix,sep=" "):
         print()
 
     if args.pause: input()
+    else: print()
 
 class Bot:
 
@@ -66,6 +67,15 @@ class Bot:
                     total += 100*y + x
         return total
 
+    def calc_GPS2(self):
+        total = 0
+        for y,row in enumerate(self.mtrx):
+            for x,el in enumerate(row):
+                if el == "[":
+                    total += 100*y + x
+        return total
+                    
+    
     def move(self,inst):
 
         dx,dy = 0,0
@@ -97,7 +107,12 @@ class Bot:
         
         #vertical
         elif dy and self.mtrx[self.y+dy][self.x] in ["[","]"]:
-            ...
+            if self.can_push_vertival(self.x,self.y+dy,dy):
+                self.push_vertical(self.x,self.y+dy,dy)
+                self.x += dx
+                self.y += dy
+                self.mtrx[self.y][self.x] = '@'
+                self.mtrx[self.y-dy][self.x-dx] = '.'
 
     def push(self,x,y,dx,dy):
         
@@ -135,6 +150,45 @@ class Bot:
 
         return False
         
+    def can_push_vertival(self,x,y,dy):
+
+        char = self.mtrx[y][x]
+
+        if char == "[":
+            if self.can_push_vertival(x,y+dy,dy) and self.can_push_vertival(x+1,y+dy,dy):
+                return True
+            return False
+        
+        elif char == "]":
+            if self.can_push_vertival(x,y+dy,dy) and self.can_push_vertival(x-1,y+dy,dy):
+                return True
+            return False
+        
+        elif char == ".": return True
+
+        elif char == "#": return False
+
+        return False
+
+    def push_vertical(self,x,y,dy):
+        
+        char = self.mtrx[y][x]
+
+        if char == "[":
+            self.push_vertical(x,y+dy,dy)
+            self.push_vertical(x+1,y+dy,dy)
+            self.mtrx[y+dy][x]   = self.mtrx[y][x]            
+            self.mtrx[y+dy][x+1] = self.mtrx[y][x+1]
+            self.mtrx[y][x]      = '.'
+            self.mtrx[y][x+1]    = '.'
+
+        elif char == "]":
+            self.push_vertical(x,y+dy,dy)
+            self.push_vertical(x-1,y+dy,dy)
+            self.mtrx[y+dy][x]   = self.mtrx[y][x]            
+            self.mtrx[y+dy][x-1] = self.mtrx[y][x-1]
+            self.mtrx[y][x]      = '.'
+            self.mtrx[y][x-1]    = '.'
 
 
 # simulate PART 1
@@ -143,10 +197,10 @@ bot = Bot(mtrx)
 
 for inst in instructions:
     bot.move(inst)
-    continue
     if args.draw: 
-        print("Inst:",inst)
+        print("Inst:",inst," "*12)
         draw(bot.mtrx)
+        print("\033[A"*(len(bot.mtrx)+2), end='')  
 print(f"[ PART 1 ] GPS = {bot.calc_GPS()}")
 
 
@@ -156,10 +210,14 @@ mtrx,instructions = load_data(double=True)
 bot.mtrx = mtrx
 bot.find_start()
 
-draw(bot.mtrx)
-
 for inst in instructions:
     bot.move(inst)
     if args.draw: 
-        print("Inst:",inst)
-        draw(bot.mtrx)
+        print("Inst:",inst," "*12)
+        draw(bot.mtrx)        
+        print("\033[A"*(len(bot.mtrx)+2), end='')  
+print(f"[ PART 2 ] GPS = {bot.calc_GPS2()}")
+
+for _ in range(len(bot.mtrx)): print(" "*len(bot.mtrx[0])*4)
+print("\033[A"*len(bot.mtrx), end='')  
+
