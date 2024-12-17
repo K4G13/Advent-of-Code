@@ -6,7 +6,7 @@ parser.add_argument('-p', '--pause', action='store_true')
 parser.add_argument('-f', '--file', default='input')
 args = parser.parse_args()
 
-def load_data():
+def load_data(double=False):
     
     data = open(args.file).read().split('\n')
 
@@ -20,7 +20,16 @@ def load_data():
             offset = i
             break
 
-        matrix.append(list(row))
+        if not double: matrix.append(list(row))
+
+        else:
+            new_list = list()
+            for el in row:
+                if el == '#': new_list.extend(['#','#'])
+                if el == 'O': new_list.extend(['[',']'])
+                if el == '.': new_list.extend(['.','.'])
+                if el == '@': new_list.extend(['@','.'])
+            matrix.append(new_list)
 
     for row in data[offset+1:]:
         instructions.extend(list(row))
@@ -49,6 +58,14 @@ class Bot:
             for x, el in enumerate(row):
                 if el == "@": self.x, self.y = x, y
 
+    def calc_GPS(self):
+        total = 0
+        for y,row in enumerate(self.mtrx):
+            for x,el in enumerate(row):
+                if el == "O": 
+                    total += 100*y + x
+        return total
+
     def move(self,inst):
 
         dx,dy = 0,0
@@ -70,6 +87,18 @@ class Bot:
                 self.mtrx[self.y][self.x] = '@'
                 self.mtrx[self.y-dy][self.x-dx] = '.'
 
+        #horizontal
+        elif dx and self.mtrx[self.y][self.x+dx] in ["[","]"]:
+            if self.push_horizontal(self.x+dx,self.y,dx):
+                self.x += dx
+                self.y += dy
+                self.mtrx[self.y][self.x] = '@'
+                self.mtrx[self.y-dy][self.x-dx] = '.'
+        
+        #vertical
+        elif dy and self.mtrx[self.y+dy][self.x] in ["[","]"]:
+            ...
+
     def push(self,x,y,dx,dy):
         
         if self.mtrx[y+dy][x+dx] == 'O':
@@ -89,13 +118,23 @@ class Bot:
 
         return False
 
-    def calc_GPS(self):
-        total = 0
-        for y,row in enumerate(self.mtrx):
-            for x,el in enumerate(row):
-                if el == "O": 
-                    total += 100*y + x
-        return total
+    def push_horizontal(self,x,y,dx):
+
+        if self.mtrx[y][x+dx] == '#':
+            return False
+        
+        elif self.mtrx[y][x+dx] == '.':
+            self.mtrx[y][x+dx] = self.mtrx[y][x]
+            return True
+        
+        elif self.mtrx[y][x+dx] in ["[","]"]:
+            if self.push_horizontal(x+dx,y,dx):
+                self.mtrx[y][x+dx] = self.mtrx[y][x]
+                return True
+            return False
+
+        return False
+        
 
 
 # simulate PART 1
@@ -104,7 +143,23 @@ bot = Bot(mtrx)
 
 for inst in instructions:
     bot.move(inst)
+    continue
     if args.draw: 
         print("Inst:",inst)
         draw(bot.mtrx)
 print(f"[ PART 1 ] GPS = {bot.calc_GPS()}")
+
+
+
+# simulate PART 2
+mtrx,instructions = load_data(double=True)
+bot.mtrx = mtrx
+bot.find_start()
+
+draw(bot.mtrx)
+
+for inst in instructions:
+    bot.move(inst)
+    if args.draw: 
+        print("Inst:",inst)
+        draw(bot.mtrx)
