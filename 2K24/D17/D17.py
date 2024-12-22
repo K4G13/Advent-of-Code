@@ -84,7 +84,31 @@ for el in output:
 string = string[:-1]
 print(string)
 
+# PART 2
+def run(register_a):
+    A = register_a
+    # C = A & 0b111
+    # B = C ^ 0b11
+    B = (A & 0b111) ^ 0b11
+    C = A >> B
+    B = B ^ C
+    # A = A >> 3
+    B = B ^ 0b101
+    return B & 0b111
+    # loop if A!=0
 
+possible = {0}
+for i in range(len(program)):
+    expected = program[-(i+1)]
+    
+    for A in possible.copy():
+        possible.remove(A)
+        A = A*8
 
+        for n in range(0,8):
+            output = run(A+n)
+            if output == expected:
+                possible.add(A+n)
 
+print(min(possible))
 
