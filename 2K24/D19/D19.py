@@ -12,24 +12,27 @@ def recursive(pattern):
 
     if pattern in cashe: return cashe[pattern]
 
-    if pattern == "": return True,[]
+    if pattern == "": return 1
 
+    total = 0
     for i in range(len(pattern)):
         
         subpatern = pattern[:i+1]
 
         if subpatern in TOWELS:
-            res,arr = recursive(pattern[i+1:])
-            if res == True:
-                cashe[pattern] = True,[subpatern]+arr
-                return True, [subpatern]+arr
-            
-    cashe[pattern] = False,[]
-    return False,[]
+            res = recursive(pattern[i+1:])
+            if res > 0: total += res
+
+    cashe[pattern] = total
+    return total
 
 
 count_possible = 0
+sum_possible = 0
 for i,p in enumerate(PATTERNS):
-    res,arr = recursive(p)
-    if res: count_possible += 1
+    res = recursive(p)
+    if res: 
+        count_possible += 1
+        sum_possible += res
 print(count_possible)
+print(sum_possible)
