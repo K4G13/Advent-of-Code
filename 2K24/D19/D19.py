@@ -34,5 +34,7 @@ for i,p in enumerate(PATTERNS):
     if res: 
         count_possible += 1
         sum_possible += res
+#PART 1
 print(count_possible)
+#PART 2
 print(sum_possible)
