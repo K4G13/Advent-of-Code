@@ -4,24 +4,17 @@ f.close()
 
 def largestJoltage(length: int, bank: str) -> int:
 
-    # print(bank)
-
     unique = set()
     unique.update(bank)
     uniqueSorted = list(unique)
     uniqueSorted.sort(reverse=True)
 
-    # print(uniqueSorted)
-
     validIdxes = []
-
     for maxChar in uniqueSorted:
         for idx in range(len(bank)):
             if bank[idx] == maxChar and idx + length <= len(bank): 
                 validIdxes.append(idx)
         if validIdxes: break
-    
-    # print(validIdxes)
 
     if length == 1: return int(bank[validIdxes[0]])
 
