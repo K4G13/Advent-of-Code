@@ -1,20 +1,42 @@
 f = open("input.txt","r")
-battery_banks = f.read().split()
+batteryBanks = f.read().split()
 f.close()
 
-def largest_2_joltage(bank: str) -> int:
-    max_jol = 0
-    for idx1 in range(len(bank)):
-        for idx2 in range(idx1+1,len(bank)):
-            jol = int(bank[idx1]+bank[idx2])
-            if jol > max_jol: max_jol = jol
-    return max_jol
+def largestJoltage(length: int, bank: str) -> int:
 
-def largest_12_joltage(bank: str) -> int:
+    # print(bank)
 
-jol_sum = 0
-for bank in battery_banks:
-    res = largest_2_joltage(bank)
-    jol_sum += res
-    # print(res)
-print(jol_sum)
+    unique = set()
+    unique.update(bank)
+    uniqueSorted = list(unique)
+    uniqueSorted.sort(reverse=True)
+
+    # print(uniqueSorted)
+
+    validIdxes = []
+
+    for maxChar in uniqueSorted:
+        for idx in range(len(bank)):
+            if bank[idx] == maxChar and idx + length <= len(bank): 
+                validIdxes.append(idx)
+        if validIdxes: break
+    
+    # print(validIdxes)
+
+    if length == 1: return bank[validIdxes[0]]
+
+    maxReturned = 0
+    for idx in validIdxes:
+        res = largestJoltage(length-1,bank[idx+1:])
+        if int(res) > maxReturned: maxReturned = int(res)
+
+    return str(bank[validIdxes[0]]) + str(maxReturned)
+
+sumOf2 = 0
+sumOf12 = 0
+for bank in batteryBanks:
+    sumOf2 += int(largestJoltage(2,bank))
+    sumOf12 += int(largestJoltage(12,bank))
+
+print(sumOf2)
+print(sumOf12)
