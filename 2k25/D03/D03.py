@@ -23,20 +23,20 @@ def largestJoltage(length: int, bank: str) -> int:
     
     # print(validIdxes)
 
-    if length == 1: return bank[validIdxes[0]]
+    if length == 1: return int(bank[validIdxes[0]])
 
     maxReturned = 0
     for idx in validIdxes:
         res = largestJoltage(length-1,bank[idx+1:])
-        if int(res) > maxReturned: maxReturned = int(res)
+        maxReturned = max(maxReturned,res)
 
-    return str(bank[validIdxes[0]]) + str(maxReturned)
+    return int(str(bank[validIdxes[0]]) + str(maxReturned))
 
 sumOf2 = 0
 sumOf12 = 0
 for bank in batteryBanks:
-    sumOf2 += int(largestJoltage(2,bank))
-    sumOf12 += int(largestJoltage(12,bank))
+    sumOf2 += largestJoltage(2,bank)
+    sumOf12 += largestJoltage(12,bank)
 
 print(sumOf2)
 print(sumOf12)
