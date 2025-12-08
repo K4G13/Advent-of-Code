@@ -1,46 +1,34 @@
-def parse(string):
-    splited = string.split()
-    intList = list(map(int,splited))
-    return intList
+import numpy as np
 
-rawRows = open("input","r").read().split("\n")
-numerRows = list(map(parse,rawRows[:-1]))
-operations = rawRows[-1].split()
+rows = open("input", "r").read().split("\n")
+Matrix = np.array(list(map(list,rows[:-1])))
+operators = rows[-1].split()
 
 # PART 01
 grandTotal = 0
-for i,op in enumerate(operations):
-    result = 1 if op == "*" else 0
-    for row in numerRows:
-        if op == "*": result *= row[i]
-        if op == "+": result += row[i]
-    grandTotal += result
-
+for i,op in enumerate(operators):
+    total = 0 if op == "+" else 1
+    for row in Matrix:
+        number = int("".join(row).split()[i])
+        if op == "+": total += number
+        if op == "*": total *= number
+    grandTotal += total
 print(grandTotal)
 
 # PART 02
-import numpy as np 
-rawRows = open("input","r").read().split("\n")
-operators = rawRows[-1].split()
-M = np.array(list(map(list,rawRows[:-1])))
-M = np.rot90(M)
-
+Matrix = np.rot90(Matrix)
+opIdx = len(operators)-1
 grandTotal = 0
-partialTotal = 0
-opIdx = len(operators) - 1
-for row in M:
-
+total = 0 if operators[opIdx] == "+" else 1
+for row in Matrix:
     s = "".join(row).strip(" ")
-    if s == "": 
+    if not s:
         opIdx -= 1
-        grandTotal += partialTotal
-        partialTotal = 1 if operators[opIdx] == "*" else 0
+        grandTotal += total
+        total = 0 if operators[opIdx] == "+" else 1
         continue
-
     number = int(s)
-
-    if operators[opIdx] == "*": partialTotal *= number
-    if operators[opIdx] == "+": partialTotal += number
-grandTotal += partialTotal
-
+    if operators[opIdx] == "+": total += number
+    if operators[opIdx] == "*": total *= number
+grandTotal += total
 print(grandTotal)
