@@ -22,7 +22,7 @@ def dist(A: Point, B: Point) -> float:
     zSqr = (A.z - B.z)**2
     return np.sqrt(xSqr+ySqr+zSqr)
 
-def getNClosest(points: list[Point], N: int) -> list[float,Point,Point]:
+def getNClosest(points: list[Point], N: int, all: bool = False) -> list[float,Point,Point]:
 
     distances = []
     for idx1 in range(len(points)):
@@ -32,33 +32,77 @@ def getNClosest(points: list[Point], N: int) -> list[float,Point,Point]:
 
     distances.sort(key=lambda x: x[0] )
 
+    if all: return distances
     return distances[:N]
 
-points = parseInput("input")
-closest = getNClosest(points,1000)
-circuits = []
+def connectBoxes(pairs: list[float,Point,Point]):
 
-for d,A,B in closest:
+    circuits = []
 
-    flagA, flagB = False, False
-    idxA, idxB = None, None
+    for _,A,B in pairs:
 
-    for i,c in enumerate(circuits):
-        if A in c:
-            flagA = True
-            idxA = i
-        if B in c:
-            flagB = True
-            idxB = i
+        flagA, flagB = False, False
+        idxA, idxB = None, None
 
-    if not flagA and not flagB: circuits.append([A,B]) 
-    if flagA and not flagB: circuits[idxA].append(B)
-    if not flagA and flagB: circuits[idxB].append(A)
-    if flagA and flagB and idxA != idxB:
-        circuits[idxA] += circuits[idxB]
-        circuits.pop(idxB)
+        for i,c in enumerate(circuits):
+            if A in c:
+                flagA = True
+                idxA = i
+            if B in c:
+                flagB = True
+                idxB = i
 
+        if not flagA and not flagB: circuits.append([A,B]) 
+        if flagA and not flagB: circuits[idxA].append(B)
+        if not flagA and flagB: circuits[idxB].append(A)
+        if flagA and flagB and idxA != idxB:
+            circuits[idxA] += circuits[idxB]
+            circuits.pop(idxB)
+
+        if len(circuits[0]) == len(points):
+            print(A,B)
+
+    return circuits
+
+FILE = "input"
+NOCONNECTIONS = 1000
+
+#PART 1
+points = parseInput(FILE)
+closest = getNClosest(points,NOCONNECTIONS)
+circuits = connectBoxes(closest)
 circuitsLengths = list(map(len,circuits))
 circuitsLengths.sort(reverse=True)
-
 print( circuitsLengths[0]*circuitsLengths[1]*circuitsLengths[2] )
+
+#PART 2
+def connectBoxes2(pairs: list[float,Point,Point], NOPpoints: int):
+
+    circuits = []
+
+    for _,A,B in pairs:
+
+        flagA, flagB = False, False
+        idxA, idxB = None, None
+
+        for i,c in enumerate(circuits):
+            if A in c:
+                flagA = True
+                idxA = i
+            if B in c:
+                flagB = True
+                idxB = i
+
+        if not flagA and not flagB: circuits.append([A,B]) 
+        if flagA and not flagB: circuits[idxA].append(B)
+        if not flagA and flagB: circuits[idxB].append(A)
+        if flagA and flagB and idxA != idxB:
+            circuits[idxA] += circuits[idxB]
+            circuits.pop(idxB)
+
+        if len(circuits) == 1 and len(circuits[0]) == NOPpoints:
+            return A.x * B.x
+
+closest = getNClosest(points,NOCONNECTIONS,True)
+result = connectBoxes2(closest,len(points))
+print( result )
