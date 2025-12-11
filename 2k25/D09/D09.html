@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 9 🟥🟩</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div>
+        <canvas width="600" height="600" style="z-index: 3;"></canvas>
+        <canvas width="600" height="600" style="z-index: 2;"></canvas>
+        <canvas width="600" height="600" style="z-index: 1;"></canvas>
+        <div id="res">
+            <span>PART_01</span><span id="display-part-1">---</span><br>
+            <span>PART_02</span><span id="display-part-2">---</span>
+        </div>
+    </div>
+
+    <style>
+        body{
+            height: 100vh;
+            background-color: #333;
+            color: white;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            font-family: "Geist", sans-serif;
+        }
+        div{
+            position: relative;
+            height: 600px;
+            width: 600px;
+        }
+        #res{
+            position: absolute;
+            top: -45px;
+            left: -5px;
+            padding-left: 5px;
+            color: #777;
+            font-weight: 200;
+        }
+        span{
+            display: inline-block;
+            min-width: 300px;
+        }
+        span:nth-of-type(2n){
+            text-align: right;
+        }
+        canvas{
+            border: solid #555 1px;
+            position: absolute;
+            image-rendering: pixelated;
+        }
+        canvas:last-of-type{
+            z-index: -1;
+        }
+    </style>
+
+    <script defer src="./D09utils.js"></script>
+    <script defer src="./D09part1.js"></script>
+    <script defer src="./D09part2.js"></script>
+    <script defer src="./D09.js"></script>
+
+</body>
+</html>
+
