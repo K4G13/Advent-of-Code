@@ -28,7 +28,7 @@ async function connectPoints(points) {
         
         ctxArr[canvasId].stroke()
         ctxArr[canvasId].fill()
-        // if(SLEEP_T) await new Promise(r => setTimeout(r, SLEEP_T));
+        if(SLEEP_T) await new Promise(r => setTimeout(r, SLEEP_T));
 
     }
 // [ 5561, 66437 ][ 94737, 50322 ]

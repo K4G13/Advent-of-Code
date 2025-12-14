@@ -7,7 +7,7 @@ async function main(){
     setUpCanvases(points)
 
     // PART 1
-    // await part1(points)
+    await part1(points)
     displayPart1.innerText = `-> ${displayPart1.innerText}`
 
     //PART 2
